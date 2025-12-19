@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Nature SMP SkyGen Ultimate List + Trade Checker</title>
+<style>
+body{margin:0;font-family:Inter,Arial,sans-serif;background:#020617;color:#e5e7eb;overflow-x:hidden;}
+header{text-align:center;padding:30px;z-index:10;position:relative;}
+h1{font-size:3rem;background:linear-gradient(90deg,#a855f7,#ec4899,#22d3ee);-webkit-background-clip:text;color:transparent;text-shadow:0 0 15px rgba(168,85,247,.5);}
+.particles{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden;}
+.particle{position:absolute;width:6px;height:6px;border-radius:50%;background:radial-gradient(circle,#c084fc,#7c3aed);animation:floatUp linear infinite;opacity:.6;}
+@keyframes floatUp{from{transform:translateY(110vh);opacity:0}to{transform:translateY(-10vh);opacity:.8}}
+.container{max-width:1400px;margin:auto;padding:20px;position:relative;z-index:2;}
+.section h2{margin:30px 0 10px;text-shadow:0 0 8px #7c3aed;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:18px;}
+.card{background:linear-gradient(180deg,#0b1224,#020617);border-radius:16px;padding:16px;text-align:center;border:1px solid #1f2937;transition:.4s;cursor:pointer;transform-style: preserve-3d;box-shadow:0 0 10px rgba(168,85,247,0.4);}
+.card:hover{transform:translateY(-12px) scale(1.05);box-shadow:0 0 20px #a855f7,0 0 40px rgba(168,85,247,.6);}
+.icon{width:64px;height:64px;image-rendering:pixelated;margin-bottom:6px;}
+.value{font-size:1.8rem;font-weight:900;background:linear-gradient(90deg,#f472b6,#c084fc,#22d3ee);-webkit-background-clip:text;color:transparent;text-shadow:0 0 8px rgba(168,85,247,0.7);}
+.trade-checker{max-width:1400px;margin:20px auto;padding:20px;background:linear-gradient(145deg,#11162b,#0b1224);border-radius:16px;border:1px solid #1f2937;box-shadow:0 4px 12px rgba(0,0,0,0.6);z-index:10;position:relative;}
+.trade-checker h2{text-align:center;margin-bottom:16px;text-shadow:0 0 6px #7c3aed;}
+.trade-panel{flex:1;min-width:280px;background:#0b1224;padding:16px;border-radius:12px;border:1px solid #1f2937;box-shadow:0 2px 8px rgba(0,0,0,0.4);}
+.trade-panel h3{text-align:center;margin-bottom:8px;}
+.trade-items{min-height:60px;margin-top:8px;}
+.trade-items div{display:flex;justify-content:space-between;align-items:center;margin:6px 0;padding:6px 8px;border-radius:8px;background:linear-gradient(90deg,#11162b,#0b1224);box-shadow:0 0 8px rgba(168,85,247,0.4);}
+.trade-panel select{width:100%;margin-top:6px;padding:8px;border-radius:10px;border:1px solid #1f2937;background:#020617;color:white;}
+.trade-panel button{margin-top:10px;padding:10px 14px;border-radius:8px;border:none;cursor:pointer;background:#ff49c4;color:#000;font-weight:700;transition:.3s;}
+.trade-panel button:hover{box-shadow:0 0 8px #ff49c4,0 0 16px rgba(255,73,196,0.5);}
+.trade-items div button{margin-left:8px;padding:2px 6px;border-radius:6px;border:none;cursor:pointer;background:#e74c3c;color:white;transition:.2s;}
+.trade-items div button:hover{background:#c0392b;}
+#trade-result{text-align:center;margin-top:16px;font-size:1.3rem;font-weight:bold;text-shadow:0 0 6px #7c3aed;}
+
+/* MODAL WITH AURA */
+#modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;z-index:50;}
+#modal-content{position:relative;background:#0b1224;padding:30px;border-radius:18px;text-align:center;box-shadow:0 0 20px #a855f7,0 0 40px rgba(168,85,247,.6);border:1px solid #1f2937;color:white;}
+#modal-name{font-size:2rem;margin-bottom:10px;}
+#modal-value{font-size:1.5rem;font-weight:700;margin-bottom:10px;}
+.modal-aura{position:absolute;inset:-20px;border-radius:25px;box-shadow:0 0 30px #ff49c4,0 0 60px #a855f7,0 0 90px #22d3ee;animation:pulseAura 2s infinite alternate;z-index:-1;}
+@keyframes pulseAura{0%{box-shadow:0 0 30px #ff49c4,0 0 60px #a855f7,0 0 90px #22d3ee;}50%{box-shadow:0 0 50px #ff49c4,0 0 100px #a855f7,0 0 150px #22d3ee;}100%{box-shadow:0 0 30px #ff49c4,0 0 60px #a855f7,0 0 90px #22d3ee;}}
+#modal-content button{margin-top:15px;padding:8px 14px;border-radius:10px;border:none;background:#ff49c4;color:#000;font-weight:700;cursor:pointer;transition:.3s;}
+#modal-content button:hover{box-shadow:0 0 8px #ff49c4,0 0 16px rgba(255,73,196,0.5);}
+</style>
+<style>
+    /* === VALUE LIST / TRADE CHECKER POLISH (CSS ONLY) === */
+
+/* Make trade checker feel official */
+.trade-checker {
+  backdrop-filter: blur(6px);
+  background: linear-gradient(160deg, #0b1224, #020617);
+}
+
+/* Panels feel cleaner */
+.trade-panel {
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.trade-panel:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 18px rgba(168,85,247,0.45);
+}
+
+/* Dropdown improvement */
+.trade-panel select {
+  outline: none;
+  font-weight: 600;
+}
+.trade-panel select:focus {
+  box-shadow: 0 0 0 2px #a855f7;
+}
+
+/* Trade items cleaner look */
+.trade-items div {
+  font-weight: 600;
+  letter-spacing: .2px;
+}
+
+/* Totals stand out like real value lists */
+#left-total,
+#right-total {
+  color: #22d3ee;
+  text-shadow: 0 0 6px rgba(34,211,238,.7);
+}
+
+/* Trade result = BIG + CLEAR */
+#trade-result {
+  padding-top: 8px;
+  font-size: 1.4rem;
+}
+
+/* Value numbers feel more “official” */
+.value {
+  letter-spacing: .5px;
+}
+
+/* Cards slightly smoother */
+.card {
+  will-change: transform;
+}
+
+</style>
+</head>
+<body>
+
+<div class="particles" id="particles"></div>
+
+<header><h1>Nature SMP SkyGen List</h1></header>
+
+<div class="trade-checker">
+<h2>Trade Checker</h2>
+<div style="display:flex;gap:20px;flex-wrap:wrap;justify-content:center;">
+<div class="trade-panel">
+<h3>Left Player</h3>
+<div id="left-items" class="trade-items"></div>
+<select id="left-select"></select>
+<button onclick="addTradeItem('left')">+ Add Item</button>
+<div style="margin-top:8px;font-weight:bold;">Total: <span id="left-total">0</span></div>
+</div>
+<div class="trade-panel">
+<h3>Right Player</h3>
+<div id="right-items" class="trade-items"></div>
+<select id="right-select"></select>
+<button onclick="addTradeItem('right')">+ Add Item</button>
+<div style="margin-top:8px;font-weight:bold;">Total: <span id="right-total">0</span></div>
+</div>
+</div>
+<div id="trade-result"></div>
+</div>
+
+<div class="container" id="list"></div>
+
+<!-- MODAL FOR ITEM INFO WITH AURA -->
+<div id="modal">
+  <div id="modal-content">
+    <h2 id="modal-name"></h2>
+    <div id="modal-value"></div>
+    <div class="modal-aura"></div>
+    <button onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<script>
+// PARTICLES
+const p=document.getElementById("particles");
+for(let i=0;i<80;i++){
+  const d=document.createElement("div");
+  d.className="particle";
+  d.style.left=Math.random()*100+"vw";
+  d.style.width=d.style.height=(Math.random()*6+4)+"px";
+  d.style.animationDuration=(Math.random()*12+8)+"s";
+  d.style.animationDelay=(Math.random()*-12)+"s";
+  p.appendChild(d);
+}
+
+// ICON PATHS
+const ITEM="https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.20.1/assets/minecraft/textures/item/";
+const BLOCK="https://raw.githubusercontent.com/InventivetalentDev/minecraft-assets/1.20.1/assets/minecraft/textures/block/";
+
+// FULL ITEM LIST
+const categories={
+"KITS":[
+{name:"Owner Kit",icon:"nether_star.png",value:84},
+{name:"Co-Owner Kit",icon:"beacon.png",value:79},
+{name:"Owner x Co-Owner Bundle",icon:"white_shulker_box.png",value:85,block:true},
+{name:"Galaxy Kit",icon:"netherite_chestplate.png",value:85},
+{name:"Galaxy Tools",icon:"netherite_pickaxe.png",value:80},
+{name:"Galaxy Mace",icon:"netherite_axe.png",value:78},
+{name:"Fire Kit",icon:"blaze_rod.png",value:75},
+{name:"Fire Tools",icon:"netherite_hoe.png",value:70},
+{name:"Fire Mace",icon:"netherite_sword.png",value:72},
+{name:"Netherite Kit",icon:"netherite_chestplate.png",value:65},
+{name:"Totem Kit",icon:"totem_of_undying.png",value:40},
+{name:"Elytra Kit",icon:"elytra.png",value:70},
+{name:"Pot Kit",icon:"potion.png",value:55},
+{name:"Gap Kit",icon:"golden_apple.png",value:50},
+{name:"WebbierList791",icon:"cobweb.png",value:65,block:true},
+{name:"Web Kit",icon:"cobweb.png",value:48,block:true},
+{name:"Redstone Kit",icon:"redstone.png",value:45},
+{name:"Builder Kit",icon:"bricks.png",value:40},
+{name:"XP Kit",icon:"experience_bottle.png",value:35},
+{name:"Wood Kit",icon:"oak_log.png",value:5}
+],
+"RARE":[
+{name:"Dragon Egg",icon:"dragon_egg.png",value:100,block:true}
+],
+"ARMOR":[
+{name:"Netherite Helmet",icon:"netherite_helmet.png",value:5},
+{name:"Netherite Chestplate",icon:"netherite_chestplate.png",value:5},
+{name:"Netherite Leggings",icon:"netherite_leggings.png",value:5},
+{name:"Netherite Boots",icon:"netherite_boots.png",value:5},
+{name:"Diamond Helmet",icon:"diamond_helmet.png",value:4},
+{name:"Diamond Chestplate",icon:"diamond_chestplate.png",value:4},
+{name:"Diamond Leggings",icon:"diamond_leggings.png",value:4},
+{name:"Diamond Boots",icon:"diamond_boots.png",value:4},
+{name:"Gold Helmet",icon:"golden_helmet.png",value:3},
+{name:"Gold Chestplate",icon:"golden_chestplate.png",value:3},
+{name:"Gold Leggings",icon:"golden_leggings.png",value:3},
+{name:"Gold Boots",icon:"golden_boots.png",value:3},
+{name:"Iron Helmet",icon:"iron_helmet.png",value:2},
+{name:"Iron Chestplate",icon:"iron_chestplate.png",value:2},
+{name:"Iron Leggings",icon:"iron_leggings.png",value:2},
+{name:"Iron Boots",icon:"iron_boots.png",value:2}
+],
+"WEAPONS":[
+{name:"Netherite Sword",icon:"netherite_sword.png",value:5},
+{name:"Diamond Sword",icon:"diamond_sword.png",value:4},
+{name:"Iron Sword",icon:"iron_sword.png",value:3},
+{name:"Bow",icon:"bow.png",value:2}
+],
+"TOOLS":[
+{name:"Netherite Pickaxe",icon:"netherite_pickaxe.png",value:5},
+{name:"Diamond Pickaxe",icon:"diamond_pickaxe.png",value:4},
+{name:"Iron Pickaxe",icon:"iron_pickaxe.png",value:3}
+],
+"ORES":[
+{name:"Netherite Ingot",icon:"netherite_ingot.png",value:5},
+{name:"Diamond",icon:"diamond.png",value:4},
+{name:"Gold Ingot",icon:"gold_ingot.png",value:3},
+{name:"Iron Ingot",icon:"iron_ingot.png",value:2},
+{name:"Coal",icon:"coal.png",value:1}
+],
+"BLOCKS":[
+{name:"Redstone",icon:"redstone.png",value:3},
+{name:"Redstone Repeater",icon:"repeater.png",value:3},
+{name:"Piston",icon:"piston.png",value:2},
+{name:"Sticky Piston",icon:"sticky_piston.png",value:2},
+{name:"Crafting Table",icon:"crafting_table.png",value:1},
+{name:"Furnace",icon:"furnace.png",value:1}
+]
+};
+
+// RENDER ITEMS
+const list=document.getElementById("list");
+const allItems=[];
+Object.entries(categories).forEach(([cat,items])=>{
+  const section=document.createElement("div");
+  section.className="section";
+  section.innerHTML=`<h2>${cat}</h2><div class="grid"></div>`;
+  const grid=section.querySelector(".grid");
+  items.forEach(i=>{
+    const card=document.createElement("div");
+    card.className="card";
+    const src=(i.block?BLOCK:ITEM)+i.icon;
+    card.innerHTML=`<img class="icon" src="${src}"><div>${i.name}</div><div class="value">${i.value}</div>`;
+    grid.appendChild(card);
+    allItems.push({name:i.name,value:i.value});
+  });
+  list.appendChild(section);
+});
+
+// TRADE CHECKER
+["left-select","right-select"].forEach(id=>{
+  const select=document.getElementById(id);
+  allItems.forEach(item=>{
+    const o=document.createElement("option");
+    o.value=item.name;
+    o.innerText=`${item.name} (${item.value})`;
+    select.appendChild(o);
+  });
+});
+function addTradeItem(side){
+  const sel=document.getElementById(side+"-select");
+  const val=sel.value;if(!val)return;
+  const item=allItems.find(i=>i.name===val);if(!item)return;
+  const cont=document.getElementById(side+"-items");
+  const div=document.createElement("div");
+  div.innerHTML=`<span>${item.name}</span><span>${item.value}</span><button>×</button>`;
+  div.querySelector("button").onclick=()=>{div.remove();updateTradeTotals();}
+  cont.appendChild(div);updateTradeTotals();
+}
+function updateTradeTotals(){
+  const leftTotal=Array.from(document.getElementById("left-items").children).reduce((a,c)=>a+parseInt(c.children[1].innerText),0);
+  const rightTotal=Array.from(document.getElementById("right-items").children).reduce((a,c)=>a+parseInt(c.children[1].innerText),0);
+  document.getElementById("left-total").innerText=leftTotal;
+  document.getElementById("right-total").innerText=rightTotal;
+  const r=document.getElementById("trade-result");
+  if(leftTotal===0 && rightTotal===0){r.innerText="";return;}
+  if(leftTotal===rightTotal)r.innerText="Fair Trade ✅";
+  else if(leftTotal>rightTotal)r.innerText="Left Player is giving more 💰";
+  else r.innerText="Right Player is giving more 💰";
+}
+
+// ITEM MODAL WITH AURA
+document.querySelectorAll(".card").forEach(card=>{
+  card.addEventListener("click",()=>{
+    const name=card.querySelector("div:nth-child(2)").innerText;
+    const value=card.querySelector(".value").innerText;
+    document.getElementById("modal-name").innerText=name;
+    document.getElementById("modal-value").innerText="Value: "+value;
+    document.getElementById("modal").style.display="flex";
+  });
+});
+function closeModal(){document.getElementById("modal").style.display="none";}
+</script>
+</body>
+</html>
